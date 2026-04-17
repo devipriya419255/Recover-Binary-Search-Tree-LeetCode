@@ -1,0 +1,35 @@
+#include <stdio.h>
+void recoverTree(struct TreeNode* root) {
+    struct TreeNode *first = NULL, *second = NULL, *prev = NULL;
+    struct TreeNode *curr = root, *temp = NULL;
+    while (curr != NULL) {
+        if (curr->left == NULL) {
+            if (prev != NULL && prev->val > curr->val) {
+                if (first == NULL) first = prev;
+                second = curr;
+            }
+            prev = curr;
+            curr = curr->right;
+        } else {
+            temp = curr->left;
+            while (temp->right != NULL && temp->right != curr) {
+                temp = temp->right;
+            }
+            if (temp->right == NULL) {
+                temp->right = curr;
+                curr = curr->left;
+            } else {
+                temp->right = NULL;
+                if (prev != NULL && prev->val > curr->val) {
+                    if (first == NULL) first = prev;
+                    second = curr;
+                }
+                prev = curr;
+                curr = curr->right;
+            }
+        }
+    }
+    int val = first->val;
+    first->val = second->val;
+    second->val = val;
+}
